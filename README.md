@@ -13,9 +13,9 @@ It captures syscall-driven behavior, scores suspicious activity with transparent
 
 ## Project Layout
 
-- `lpba_monitor.py`: telemetry collector and heuristic scoring engine
-- `analyze_lpba.py`: pandas report generation
-- `dummy_malware.c`: harmless suspicious-behavior simulator for testing
+- `source/lpba_monitor.py`: telemetry collector and heuristic scoring engine
+- `source/analyze_lpba.py`: pandas report generation
+- `source/dummy_malware.c`: harmless suspicious-behavior simulator for testing
 - `setup_lpba.sh`: Linux bootstrap and execution automation
 - `requirements.txt`: Python dependencies
 
@@ -70,9 +70,9 @@ What this does:
 
 - Creates `.venv` if missing
 - Installs Python dependencies from `requirements.txt`
-- Compiles `dummy_malware.c`
-- Runs `lpba_monitor.py` against `./dummy_malware`
-- Runs `analyze_lpba.py` to generate CSV/JSON reports
+- Compiles `source/dummy_malware.c`
+- Runs `source/lpba_monitor.py` against `./dummy_malware`
+- Runs `source/analyze_lpba.py` to generate CSV/JSON reports
 
 ### 4) Verify outputs
 
@@ -102,9 +102,9 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-gcc -O2 -Wall -Wextra dummy_malware.c -o dummy_malware
-python lpba_monitor.py --out artifacts --cmd ./dummy_malware
-python analyze_lpba.py --events artifacts/events.jsonl --out artifacts
+gcc -O2 -Wall -Wextra source/dummy_malware.c -o dummy_malware
+python source/lpba_monitor.py --out artifacts --cmd ./dummy_malware
+python source/analyze_lpba.py --events artifacts/events.jsonl --out artifacts
 ```
 
 ### 6) Optional QA scenario tests
@@ -114,22 +114,22 @@ These map to the QA categories below and help measure false positives/negatives.
 False-positive probe (benign temp-file writes):
 
 ```bash
-python lpba_monitor.py --out artifacts --cmd bash -lc 'for i in $(seq 1 20); do echo ok > /tmp/lpba_benign_$i; done'
-python analyze_lpba.py --events artifacts/events.jsonl --out artifacts
+python source/lpba_monitor.py --out artifacts --cmd bash -lc 'for i in $(seq 1 20); do echo ok > /tmp/lpba_benign_$i; done'
+python source/analyze_lpba.py --events artifacts/events.jsonl --out artifacts
 ```
 
 Potential beaconing probe (repeated outbound connections):
 
 ```bash
-python lpba_monitor.py --out artifacts --cmd bash -lc 'for i in $(seq 1 10); do nc -z -w1 1.1.1.1 443; done'
-python analyze_lpba.py --events artifacts/events.jsonl --out artifacts
+python source/lpba_monitor.py --out artifacts --cmd bash -lc 'for i in $(seq 1 10); do nc -z -w1 1.1.1.1 443; done'
+python source/analyze_lpba.py --events artifacts/events.jsonl --out artifacts
 ```
 
 Sensitive-file access denial probe (non-root):
 
 ```bash
-python lpba_monitor.py --out artifacts --cmd bash -lc 'cat /etc/shadow >/dev/null 2>&1 || true'
-python analyze_lpba.py --events artifacts/events.jsonl --out artifacts
+python source/lpba_monitor.py --out artifacts --cmd bash -lc 'cat /etc/shadow >/dev/null 2>&1 || true'
+python source/analyze_lpba.py --events artifacts/events.jsonl --out artifacts
 ```
 
 ### 7) Troubleshooting

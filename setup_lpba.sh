@@ -6,6 +6,7 @@ set -euo pipefail
 # runs LPBA telemetry collection, and produces analysis reports.
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SOURCE_DIR="${ROOT_DIR}/source"
 ARTIFACTS_DIR="${ROOT_DIR}/artifacts"
 VENV_DIR="${ROOT_DIR}/.venv"
 
@@ -35,9 +36,9 @@ source "${VENV_DIR}/bin/activate"
 python -m pip --version >/dev/null
 pip install -r "${ROOT_DIR}/requirements.txt"
 
-gcc -O2 -Wall -Wextra "${ROOT_DIR}/dummy_malware.c" -o "${ROOT_DIR}/dummy_malware"
+gcc -O2 -Wall -Wextra "${SOURCE_DIR}/dummy_malware.c" -o "${ROOT_DIR}/dummy_malware"
 
-python "${ROOT_DIR}/lpba_monitor.py" --out "${ARTIFACTS_DIR}" --cmd "${ROOT_DIR}/dummy_malware"
-python "${ROOT_DIR}/analyze_lpba.py" --events "${ARTIFACTS_DIR}/events.jsonl" --out "${ARTIFACTS_DIR}"
+python "${SOURCE_DIR}/lpba_monitor.py" --out "${ARTIFACTS_DIR}" --cmd "${ROOT_DIR}/dummy_malware"
+python "${SOURCE_DIR}/analyze_lpba.py" --events "${ARTIFACTS_DIR}/events.jsonl" --out "${ARTIFACTS_DIR}"
 
 echo "LPBA completed. Artifacts in ${ARTIFACTS_DIR}"
