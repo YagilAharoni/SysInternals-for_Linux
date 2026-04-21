@@ -182,23 +182,6 @@ Validate detection quality, false-positive handling, false-negative resilience, 
 - Single high-I/O workload under monitoring
 - Concurrent monitored workloads
 
-### Metrics
-
-- Detection precision/recall across scenario sets
-- Event ingestion completeness (dropped trace lines)
-- CPU and memory overhead of monitor process
-- Stability (no monitor crashes under stress)
-
-## GitHub Presentation Guide
-
-To impress a Vulnerability Research lead, include:
-
-1. Threat model and assumptions in README
-2. Architecture diagram (collector -> heuristics -> reports)
-3. Reproducible demo command and expected outputs
-4. QA matrix with false positive/negative evidence
-5. Known limitations and evasions (and planned mitigations)
-6. Changelog showing iterative heuristic tuning
 
 ## Safety Note
 
